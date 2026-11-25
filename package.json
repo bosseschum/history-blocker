@@ -1,0 +1,17 @@
+{
+  "name": "history-blocker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.8",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
