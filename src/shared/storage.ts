@@ -1,3 +1,4 @@
+import browser from "./browser";
 import { normalizeDomain } from "./matching";
 
 export const BLOCKLIST_KEY = "blocklist";
@@ -18,12 +19,12 @@ export function parseBlocklist(value: unknown): string[] {
 }
 
 export async function getBlocklist(): Promise<string[]> {
-  const result = await chrome.storage.sync.get(BLOCKLIST_KEY);
+  const result = await browser.storage.sync.get(BLOCKLIST_KEY);
   return parseBlocklist(result[BLOCKLIST_KEY]);
 }
 
 async function saveBlocklist(list: string[]): Promise<void> {
-  await chrome.storage.sync.set({ [BLOCKLIST_KEY]: list });
+  await browser.storage.sync.set({ [BLOCKLIST_KEY]: list });
 }
 
 /** Adds a domain. Returns the normalized domain, or null if the input was invalid. */

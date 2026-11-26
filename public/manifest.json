@@ -9,7 +9,14 @@
     "default_popup": "popup.html"
   },
   "background": {
+    "scripts": ["background.js"],
     "service_worker": "background.js",
     "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "history-blocker@example.com",
+      "strict_min_version": "121.0"
+    }
   }
 }

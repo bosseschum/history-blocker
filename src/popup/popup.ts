@@ -1,3 +1,4 @@
+import browser from "../shared/browser";
 import { normalizeDomain } from "../shared/matching";
 import { BLOCKLIST_KEY, addDomain, getBlocklist, removeDomain } from "../shared/storage";
 
@@ -26,7 +27,7 @@ function showMessage(text: string, isError = false): void {
 
 // --- Rendering -------------------------------------------------------
 // The storage is the single source of truth. Every change (from this
-// popup, from the service worker, from another synced device) ends up
+// popup, from the background script, from another synced device) ends up
 // in storage, fires onChanged, and re-renders the list from scratch.
 
 async function render(): Promise<void> {
@@ -71,10 +72,9 @@ function updateCurrentButton(domains: readonly string[]): void {
 // --- Current tab -----------------------------------------------------
 
 async function loadCurrentDomain(): Promise<void> {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
 
-  // tab.url is only readable thanks to the "activeTab" permission,
-  // which Chrome grants when the user opens the popup.
+  // tab.url is only readable thanks to the "tabs" permission.
   const domain = tab?.url ? normalizeDomain(tab.url) : null;
 
   currentDomain = domain;
@@ -100,7 +100,7 @@ currentBtn.addEventListener("click", async () => {
   showMessage(`Blocked ${currentDomain}`);
 });
 
-chrome.storage.onChanged.addListener((changes, area) => {
+browser.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && changes[BLOCKLIST_KEY]) void render();
 });
 

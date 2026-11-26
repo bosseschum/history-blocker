@@ -1,17 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BLOCKLIST_KEY, addDomain, getBlocklist, parseBlocklist, removeDomain } from "./storage";
 
-const store = new Map<string, unknown>();
+const { store } = vi.hoisted(() => {
+  const store = new Map<string, unknown>();
 
-vi.stubGlobal("chrome", {
-  storage: {
-    sync: {
-      get: vi.fn(async (key: string) => ({ [key]: store.get(key) })),
-      set: vi.fn(async (values: Record<string, unknown>) => {
-        for (const [key, value] of Object.entries(values)) store.set(key, value);
-      }),
+  vi.stubGlobal("browser", {
+    storage: {
+      sync: {
+        get: vi.fn(async (key: string) => ({ [key]: store.get(key) })),
+        set: vi.fn(async (values: Record<string, unknown>) => {
+          for (const [key, value] of Object.entries(values)) store.set(key, value);
+        }),
+      },
     },
-  },
+  });
+
+  return { store };
 });
 
 beforeEach(() => {
